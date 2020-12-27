@@ -14,6 +14,16 @@ public class SwiftSoundpoolPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "initSoundpool":
+            do {
+                if #available(iOS 10.0, *) {
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                } else {
+                    // Fallback on earlier versions
+                }
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print(error)
+            }
             // TODO create distinction between different types of audio playback
             let attributes = call.arguments as! NSDictionary
             let maxStreams = attributes["maxStreams"] as! Int
